@@ -6,6 +6,7 @@ import { VendorsModule } from './vendors/vendors.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { OrdersModule } from './orders/orders.module';
 import { PickupPointsModule } from './pickup_points/pickup_points.module';
+import { UsersModule } from './users/users.module';
 import 'dotenv/config'
 
 @Module({
@@ -16,7 +17,8 @@ import 'dotenv/config'
     VendorsModule,
     ReviewsModule,
     OrdersModule,
-    PickupPointsModule
+    PickupPointsModule,
+    UsersModule
   ],
   controllers: [],
   providers: [],
