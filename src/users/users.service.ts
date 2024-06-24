@@ -4,88 +4,93 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Customer } from '../customers/customers.schema';
 import { Vendor } from 'src/vendors/vendors.schema';
 import { CreateUserDto } from './dto/create-user.dto';
-import * as bcrypt from 'bcrypt';
+import { hash, compare } from 'bcrypt';
 
-enum UserRole {
-  CUSTOMER = 'Customer',
-  VENDOR = 'Vendor',
-}
+const UserRole = {
+  Customer: 'Customer',
+  Vendor: 'Vendor',
+} as const;
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectModel(UserRole.CUSTOMER) private readonly customerModel: Model<Customer>,
-    @InjectModel(UserRole.VENDOR) private readonly vendorModel: Model<Vendor>,
+    @InjectModel(UserRole.Customer) private readonly customerModel: Model<Customer>,
+    @InjectModel(UserRole.Vendor) private readonly vendorModel: Model<Vendor>,
   ) {}
 
-  private isModel(role: string) {
-    let model;
+  private getModelByRole(role: string): Model<Customer | Vendor> {
     switch (role) {
-      case UserRole.CUSTOMER:
+      case UserRole.Customer: {
         if (!this.customerModel) {
-          throw new Error(`Модель для роли ${UserRole.CUSTOMER} не найдена`);
+          throw new Error(`Модель для роли ${UserRole.Customer} не найдена`);
         }
-        model = this.customerModel;
-        break;
-      case UserRole.VENDOR:
+        return this.customerModel;
+      }
+      case UserRole.Vendor: {
         if (!this.vendorModel) {
-          throw new Error(`Модель для роли ${UserRole.VENDOR} не найдена`);
+          throw new Error(`Модель для роли ${UserRole.Vendor} не найдена`);
         }
-        model = this.vendorModel;
-        break;
-      default:
+        return this.vendorModel;
+      }
+      default: {
         throw new Error(`Неподдерживаемый тип пользователя: ${role}`);
+      }
     }
-    return model;
   }
 
-  async findByEmailAndPassword(role: string, email: string, password: string) {
-    const model: Model<Customer | Vendor> = this.isModel(role);
+  private async checkPasword(password: string, resultPassword: string) {
+    const passwordMatch = await compare(password, resultPassword);
+    if (!passwordMatch) {
+      throw new Error('Ошибка при попытке входа');
+    }
+  }
+
+  public async findUserByEmailAndPassword(role: string, email: string, password: string) {
+    const model = this.getModelByRole(role);
     const result = await model.findOne({ email }).exec();
     if (!result) {
-      throw Error(`Пользователь с таким email не найден`);
+      throw new Error('Пользователь с такими данными не найден');
     }
-    const passwordMatch = await bcrypt.compare(password, result.password);
-    if (!passwordMatch) {
-      throw new Error('Invalid password');
-    }
+    this.checkPasword(password, result.password);
     return result;
   }
 
-  async findByPhoneNumberAndPassword(role: string, phone_number: string, password: string) {
-    const model: Model<Customer | Vendor> = this.isModel(role);
+  public async findUserByPhoneNumberAndPassword(
+    role: string,
+    phone_number: string,
+    password: string,
+  ) {
+    const model = this.getModelByRole(role);
     const result = await model.findOne({ phone_number }).exec();
     if (!result) {
-      throw Error(`Пользователь с таким номером телефона не найден`);
+      throw new Error('Пользователь с такими данными не найден');
     }
-    const passwordMatch = await bcrypt.compare(password, result.password);
-    if (!passwordMatch) {
-      throw new Error('Invalid password');
-    }
+    this.checkPasword(password, result.password);
     return result;
   }
 
-  async findUserByEmailOrPhoneNumber(role: string, email?: string, phone_number?: string) {
-    const model: Model<Customer | Vendor> = this.isModel(role);
-    const result = email
-      ? await model.findOne({ email }).exec()
-      : phone_number
-        ? model.findOne({ phone_number }).exec()
-        : null;
-    return result;
+  private async findUserByEmailOrPhoneNumber(role: string, email?: string, phoneNumber?: string) {
+    const model = this.getModelByRole(role);
+    if (email) {
+      return await model.exists({ email }).exec();
+    }
+    if (phoneNumber) {
+      return await model.exists({ phoneNumber }).exec();
+    }
+    return false;
   }
 
-  async createUser(role: string, userData: CreateUserDto) {
+  public async createUser(role: string, userData: CreateUserDto) {
     const existingUser = await this.findUserByEmailOrPhoneNumber(
       role,
       userData.email,
       userData.phone_number,
     );
     if (existingUser) {
-      throw new Error(`Пользователь с таким email или номером телефона уже существует`);
+      throw new Error('Пользователь с таким данными уже существует');
     }
-    const passwordHash = await bcrypt.hash(userData.password, 10);
-    const model: Model<Customer | Vendor> = this.isModel(role);
+    const passwordHash = await hash(userData.password, 10);
+    const model = this.getModelByRole(role);
     const newUser = await new model({
       ...userData,
       password: passwordHash,

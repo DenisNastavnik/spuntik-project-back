@@ -19,7 +19,7 @@ export class UsersController {
     @Body('email') email: string,
     @Body('password') password: string,
   ): Promise<Customer | Vendor> {
-    return await this.userService.findByEmailAndPassword(role, email, password);
+    return await this.userService.findUserByEmailAndPassword(role, email, password);
   }
 
   @ApiOperation({ summary: 'Аутентификация пользователя по phone_number и password' })
@@ -29,7 +29,7 @@ export class UsersController {
     @Body('phone_number') phone_number: string,
     @Body('password') password: string,
   ): Promise<Customer | Vendor> {
-    return await this.userService.findByPhoneNumberAndPassword(role, phone_number, password);
+    return await this.userService.findUserByPhoneNumberAndPassword(role, phone_number, password);
   }
 
   @ApiOperation({ summary: 'Регистрация нового пользователя' })
