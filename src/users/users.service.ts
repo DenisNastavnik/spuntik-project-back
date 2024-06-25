@@ -5,6 +5,7 @@ import { Customer } from '../customers/customers.schema';
 import { Vendor } from 'src/vendors/vendors.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hash, compare } from 'bcrypt';
+import { JwtService } from '@nestjs/jwt';
 
 const UserRole = {
   Customer: 'Customer',
@@ -16,6 +17,7 @@ export class UsersService {
   constructor(
     @InjectModel(UserRole.Customer) private readonly customerModel: Model<Customer>,
     @InjectModel(UserRole.Vendor) private readonly vendorModel: Model<Vendor>,
+    private jwtService: JwtService
   ) {}
 
   private getModelByRole(role: string): Model<Customer | Vendor> {
@@ -45,28 +47,32 @@ export class UsersService {
     }
   }
 
-  public async findUserByEmailAndPassword(role: string, email: string, password: string) {
+  public async findUserByEmailAndPassword(role: string, email: string, pass: string) {
     const model = this.getModelByRole(role);
-    const result = await model.findOne({ email }).exec();
-    if (!result) {
+    const user = await model.findOne({ email }).exec();
+    if (!user) {
       throw new Error('Пользователь с такими данными не найден');
     }
-    this.checkPasword(password, result.password);
-    return result;
+    this.checkPasword(pass, user.password);
+    const payload = { sub: user._id, email: user.email };
+    const {password, ...result} = user.toObject();
+    return {user: result,  access_token: await this.jwtService.signAsync(payload)};
   }
 
   public async findUserByPhoneNumberAndPassword(
     role: string,
     phone_number: string,
-    password: string,
+    pass: string,
   ) {
     const model = this.getModelByRole(role);
-    const result = await model.findOne({ phone_number }).exec();
-    if (!result) {
+    const user = await model.findOne({ phone_number }).exec();
+    if (!user) {
       throw new Error('Пользователь с такими данными не найден');
     }
-    this.checkPasword(password, result.password);
-    return result;
+    this.checkPasword(pass, user.password);
+    const payload = { sub: user._id, phone_number: user.phone_number };
+    const {password, ...result} = user.toObject();
+    return {user: result,  access_token: await this.jwtService.signAsync(payload)};
   }
 
   private async findUserByEmailOrPhoneNumber(role: string, email?: string, phoneNumber?: string) {

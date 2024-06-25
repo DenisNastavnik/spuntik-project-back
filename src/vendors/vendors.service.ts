@@ -8,11 +8,11 @@ export class VendorsService {
   constructor(@InjectModel('Vendor') private readonly vendorModel: Model<Vendor>) {}
 
   async findAll(): Promise<Vendor[]> {
-    return await this.vendorModel.find().exec();
+    return await this.vendorModel.find().select('-password').exec();
   }
 
   async findOne(id: string): Promise<Vendor> {
-    const result = await this.vendorModel.findById(id).exec();
+    const result = await this.vendorModel.findById(id).select('-password').exec();
     if (!result) {
       throw Error(`Пользователь с id ${id} не найден`);
     }
@@ -20,7 +20,7 @@ export class VendorsService {
   }
 
   async update(id: string, vendor: Vendor): Promise<Vendor> {
-    const result = await this.vendorModel.findByIdAndUpdate(id, vendor, { new: true });
+    const result = await this.vendorModel.findByIdAndUpdate(id, vendor, { new: true }).select('-password').exec();
     if (!result) {
       throw Error(`Пользователь с id ${id} не найден`);
     }
@@ -28,7 +28,7 @@ export class VendorsService {
   }
 
   async delete(id: string): Promise<Vendor> {
-    const result = await this.vendorModel.findByIdAndDelete(id);
+    const result = await this.vendorModel.findByIdAndDelete(id).select('-password').exec();
     if (!result) {
       throw Error(`Пользователь с id ${id} не найден`);
     }
