@@ -12,7 +12,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CustomersService } from './customers.service';
 import { Customer } from './customers.schema';
-import { AuthGuard } from 'src/users/users.guard';
+import { AuthGuard } from '../users/users.guard';
 
 @ApiTags('Customers')
 @Controller('customers')

@@ -12,7 +12,7 @@ import {
 import { VendorsService } from './vendors.service';
 import { Vendor } from './vendors.schema';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AuthGuard } from 'src/users/users.guard';
+import { AuthGuard } from '../users/users.guard';
 
 @Controller('vendors')
 export class VendorsController {
