@@ -4,6 +4,11 @@
 $ npm install
 ```
 
+## ENV
+
+Specify environment variables in the `.env` file. 
+Example in the `.env.example` file.
+
 ## Running the app
 
 ```bash

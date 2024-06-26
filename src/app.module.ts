@@ -8,6 +8,7 @@ import { OrdersModule } from './orders/orders.module';
 import { PickupPointsModule } from './pickup_points/pickup_points.module';
 import { UsersModule } from './users/users.module';
 import 'dotenv/config'
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -18,7 +19,12 @@ import 'dotenv/config'
     ReviewsModule,
     OrdersModule,
     PickupPointsModule,
-    UsersModule
+    UsersModule,
+    JwtModule.register({
+      global: true,
+      secret: `${process.env.SECRET}`,
+      signOptions: { expiresIn: '24h' },
+    }),
   ],
   controllers: [],
   providers: [],

@@ -7,10 +7,12 @@ import {
   HttpStatus,
   Param,
   Put,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CustomersService } from './customers.service';
 import { Customer } from './customers.schema';
+import { AuthGuard } from 'src/users/users.guard';
 
 @ApiTags('Customers')
 @Controller('customers')
@@ -33,6 +35,7 @@ export class CustomersController {
 
   @ApiOperation({ summary: 'Получение пользователя по id' })
   @ApiResponse({ status: 200, type: Customer })
+  @UseGuards(AuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Customer | null> {
     try {
@@ -48,6 +51,7 @@ export class CustomersController {
 
   @ApiOperation({ summary: 'Изменение пользователя по id' })
   @ApiResponse({ status: 200, type: Customer })
+  @UseGuards(AuthGuard)
   @Put(':id')
   async update(@Param('id') id: string, @Body() customer: Customer): Promise<Customer> {
     try {
@@ -69,6 +73,7 @@ export class CustomersController {
 
   @ApiOperation({ summary: 'Удаление пользователя по id' })
   @ApiResponse({ status: 200, type: Customer })
+  @UseGuards(AuthGuard)
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Customer> {
     try {

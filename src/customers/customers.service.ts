@@ -9,11 +9,11 @@ export class CustomersService {
   constructor(@InjectModel('Customer') private readonly customerModel: Model<Customer>) {}
 
   async findAll(): Promise<Customer[]> {
-    return await this.customerModel.find().exec();
+    return await this.customerModel.find().select('-password').exec();
   }
 
   async findOne(id: string): Promise<Customer> {
-    const result = await this.customerModel.findById(id).exec();
+    const result = await this.customerModel.findById(id).select('-password').exec();
     if (!result) {
       throw Error(`Пользователь с id ${id} не найден`)
     }
@@ -21,7 +21,7 @@ export class CustomersService {
   }
 
   async update(id: string, customer: Customer): Promise<Customer> {
-    const result = await this.customerModel.findByIdAndUpdate(id, {customer}, { new: true });
+    const result = await this.customerModel.findByIdAndUpdate(id, customer, { new: true }).select('-password').exec();
     if (!result) {
       throw Error(`Пользователь с id ${id} не найден`)
     }
@@ -29,7 +29,7 @@ export class CustomersService {
   }
 
   async delete(id: string): Promise<Customer> {
-    const result = await this.customerModel.findByIdAndDelete(id);
+    const result = await this.customerModel.findByIdAndDelete(id).select('-password').exec();
     if (!result) {
       throw Error(`Пользователь с id ${id} не найден`)
     }
