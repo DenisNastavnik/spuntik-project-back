@@ -104,6 +104,9 @@ export class UsersService {
     if (!newUser) {
       throw new Error('Произошла ошибка при регистрации пользователя');
     }
-    return newUser;
+    const { password, ...result } = newUser.toObject();
+    const payload = { sub: newUser._id, phone_number: newUser.phone_number };
+
+    return { user: result, access_token: await this.jwtService.signAsync(payload) };
   }
 }
