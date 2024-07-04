@@ -14,7 +14,7 @@ export class ProductsService {
   async findOne(id: string): Promise<Product> {
     const result = await this.productModel.findById(id).exec();
     if (result === null) {
-      throw Error(`Товар с ${id} не найден`)
+      throw Error(`Товар с ${id} не найден`);
     }
     return result;
   }
@@ -27,7 +27,7 @@ export class ProductsService {
   async update(id: string, product: Product): Promise<Product> {
     const result = await this.productModel.findByIdAndUpdate(id, product, { new: true });
     if (result === null) {
-      throw Error(`Товар с ${id} не найден`)
+      throw Error(`Товар с ${id} не найден`);
     }
     return result;
   }
@@ -35,7 +35,7 @@ export class ProductsService {
   async delete(id: string): Promise<Product> {
     const result = await this.productModel.findByIdAndDelete(id);
     if (result === null) {
-      throw Error(`Товар с ${id} не найден`)
+      throw Error(`Товар с ${id} не найден`);
     }
     return result;
   }

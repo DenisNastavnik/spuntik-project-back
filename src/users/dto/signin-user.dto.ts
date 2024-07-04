@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty } from 'class-validator';;
+import { IsString, IsNotEmpty } from 'class-validator';
 import mongoose from 'mongoose';
 
 export class SignInUserDto {

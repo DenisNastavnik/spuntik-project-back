@@ -7,7 +7,7 @@ import {
   HttpStatus,
   Param,
   Put,
-  UseGuards
+  UseGuards,
 } from '@nestjs/common';
 import { VendorsService } from './vendors.service';
 import { Vendor } from './vendors.schema';

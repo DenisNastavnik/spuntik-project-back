@@ -20,7 +20,10 @@ export class VendorsService {
   }
 
   async update(id: string, vendor: Vendor): Promise<Vendor> {
-    const result = await this.vendorModel.findByIdAndUpdate(id, vendor, { new: true }).select('-password').exec();
+    const result = await this.vendorModel
+      .findByIdAndUpdate(id, vendor, { new: true })
+      .select('-password')
+      .exec();
     if (!result) {
       throw Error(`Пользователь с id ${id} не найден`);
     }
