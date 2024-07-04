@@ -24,8 +24,8 @@ export class PickupPoint {
     type: {
       region: String,
       city: String,
-      street_cname: String,
-      street_anme: String,
+      street_name: String,
+      street_number: String,
     },
   })
   address: { region: string; city: string; street_name: string; street_number: string };
