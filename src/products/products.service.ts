@@ -11,6 +11,15 @@ export class ProductsService {
     return await this.productModel.find().exec();
   }
 
+  async findAllCategories(): Promise<string[]> {
+    const products = await this.productModel.find({}, 'category').exec();
+    const categories: Set<string> = new Set();
+    for (const product of products) {
+      categories.add(product.category);
+    }
+    return Array.from(categories);
+  }
+
   async findOne(id: string): Promise<Product> {
     const result = await this.productModel.findById(id).exec();
     if (result === null) {

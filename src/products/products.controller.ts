@@ -1,4 +1,5 @@
-import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
+  Put,
+  ValidationPipe,
 import { ProductsService } from './products.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Product } from './products.schema';
@@ -10,9 +11,15 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Получение всех товаров' })
   @ApiResponse({ status: 200, type: [Product] })
-  @Get()
+  @Get('/')
   async findAll(): Promise<Product[]> {
     return await this.productsService.findAll();
+  }
+
+  @ApiOperation({ summary: 'Получение категорий' })
+  @Get('/categories')
+  async findAllCategories(): Promise<string[]> {
+    return await this.productsService.findAllCategories();
   }
 
   @ApiOperation({ summary: 'Получение товара по id' })
