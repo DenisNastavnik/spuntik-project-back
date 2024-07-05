@@ -1,8 +1,18 @@
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
   Put,
   ValidationPipe,
+  UseGuards,
+} from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Product } from './products.schema';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @ApiTags('Products')
 @Controller('products')
@@ -31,8 +41,10 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Создание нового товара' })
   @ApiResponse({ status: 200, type: Product })
-  @Post()
-  async create(@Body() product: Product): Promise<Product> {
+  @Post('/create')
+  async create(
+    @Body(new ValidationPipe({ transform: true })) product: CreateProductDto,
+  ): Promise<Product> {
     return await this.productsService.create(product);
   }
 

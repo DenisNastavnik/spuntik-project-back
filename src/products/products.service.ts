@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { Product } from './products.schema';
 import { InjectModel } from '@nestjs/mongoose';
+import { CreateProductDto } from './dto/create-product.dto';
 
 @Injectable()
 export class ProductsService {
@@ -28,7 +29,7 @@ export class ProductsService {
     return result;
   }
 
-  async create(product: Product): Promise<Product> {
+  async create(product: CreateProductDto): Promise<Product> {
     const newProduct = new this.productModel(product);
     return await newProduct.save();
   }
