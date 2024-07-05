@@ -13,6 +13,8 @@ import { VendorsService } from './vendors.service';
 import { Vendor } from './vendors.schema';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { AuthGuard } from '../users/users.guard';
+import { RolesGuard } from 'src/users/roles.guard';
+import { Roles } from 'src/decorators/roles.decorators';
 
 @Controller('vendors')
 export class VendorsController {
@@ -34,7 +36,8 @@ export class VendorsController {
 
   @ApiOperation({ summary: 'Получение пользователя по id' })
   @ApiResponse({ status: 200, type: Vendor })
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('Vendor')
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Vendor | null> {
     try {
@@ -50,7 +53,8 @@ export class VendorsController {
 
   @ApiOperation({ summary: 'Изменение пользователя по id' })
   @ApiResponse({ status: 200, type: Vendor })
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('Vendor')
   @Put(':id')
   async update(@Param('id') id: string, @Body() vendor: Vendor): Promise<Vendor> {
     try {
@@ -72,7 +76,8 @@ export class VendorsController {
 
   @ApiOperation({ summary: 'Удаление пользователя по id' })
   @ApiResponse({ status: 200, type: Vendor })
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('Vendor')
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Vendor> {
     try {
