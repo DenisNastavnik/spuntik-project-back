@@ -13,6 +13,9 @@ import { ProductsService } from './products.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Product } from './products.schema';
 import { CreateProductDto } from './dto/create-product.dto';
+import { AuthGuard } from 'src/users/users.guard';
+import { RolesGuard } from 'src/users/roles.guard';
+import { Roles } from 'src/decorators/roles.decorators';
 
 @ApiTags('Products')
 @Controller('products')
@@ -41,6 +44,8 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Создание нового товара' })
   @ApiResponse({ status: 200, type: Product })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('Vendor')
   @Post('/create')
   async create(
     @Body(new ValidationPipe({ transform: true })) product: CreateProductDto,
@@ -50,6 +55,8 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Изменение товара' })
   @ApiResponse({ status: 200, type: Product })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('Vendor')
   @Put(':id')
   async update(@Param('id') id: string, @Body() product: Product): Promise<Product> {
     return await this.productsService.update(id, product);
@@ -57,6 +64,8 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Удаление товара' })
   @ApiResponse({ status: 200, type: Product })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles('Vendor')
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Product> {
     return await this.productsService.delete(id);
