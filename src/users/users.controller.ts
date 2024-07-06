@@ -17,7 +17,7 @@ export class UsersController {
     @Body('role') role: string,
     @Body('email') email: string,
     @Body('password') password: string,
-  ): Promise<{ user: SignInUserDto,  access_token: string }> {
+  ): Promise<{ user: SignInUserDto; access_token: string }> {
     return await this.userService.findUserByEmailAndPassword(role, email, password);
   }
 
@@ -27,7 +27,7 @@ export class UsersController {
     @Body('role') role: string,
     @Body('phone_number') phone_number: string,
     @Body('password') password: string,
-  ): Promise<{ user: SignInUserDto,  access_token: string }> {
+  ): Promise<{ user: SignInUserDto; access_token: string }> {
     return await this.userService.findUserByPhoneNumberAndPassword(role, phone_number, password);
   }
 

@@ -7,12 +7,14 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { OrdersModule } from './orders/orders.module';
 import { PickupPointsModule } from './pickup_points/pickup_points.module';
 import { UsersModule } from './users/users.module';
-import 'dotenv/config'
+import 'dotenv/config';
 import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
-    MongooseModule.forRoot(`mongodb+srv://${process.env.MONGO_LOGIN}:${process.env.MONGO_PASSWORD}@cluster0.5roqj5k.mongodb.net/store?retryWrites=true&w=majority&appName=Cluster0`),
+    MongooseModule.forRoot(
+      `mongodb+srv://${process.env.MONGO_LOGIN}:${process.env.MONGO_PASSWORD}@cluster0.5roqj5k.mongodb.net/store?retryWrites=true&w=majority&appName=Cluster0`,
+    ),
     ProductsModule,
     CustomersModule,
     VendorsModule,

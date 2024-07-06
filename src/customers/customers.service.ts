@@ -14,15 +14,18 @@ export class CustomersService {
   async findOne(id: string): Promise<Customer> {
     const result = await this.customerModel.findById(id).select('-password').exec();
     if (!result) {
-      throw Error(`Пользователь с id ${id} не найден`)
+      throw Error(`Пользователь с id ${id} не найден`);
     }
     return result;
   }
 
   async update(id: string, customer: Customer): Promise<Customer> {
-    const result = await this.customerModel.findByIdAndUpdate(id, customer, { new: true }).select('-password').exec();
+    const result = await this.customerModel
+      .findByIdAndUpdate(id, customer, { new: true })
+      .select('-password')
+      .exec();
     if (!result) {
-      throw Error(`Пользователь с id ${id} не найден`)
+      throw Error(`Пользователь с id ${id} не найден`);
     }
     return result;
   }
@@ -30,7 +33,7 @@ export class CustomersService {
   async delete(id: string): Promise<Customer> {
     const result = await this.customerModel.findByIdAndDelete(id).select('-password').exec();
     if (!result) {
-      throw Error(`Пользователь с id ${id} не найден`)
+      throw Error(`Пользователь с id ${id} не найден`);
     }
     return result;
   }

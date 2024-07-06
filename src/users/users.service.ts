@@ -17,7 +17,7 @@ export class UsersService {
   constructor(
     @InjectModel(UserRole.Customer) private readonly customerModel: Model<Customer>,
     @InjectModel(UserRole.Vendor) private readonly vendorModel: Model<Vendor>,
-    private jwtService: JwtService
+    private jwtService: JwtService,
   ) {}
 
   private getModelByRole(role: string): Model<Customer | Vendor> {
@@ -54,25 +54,21 @@ export class UsersService {
       throw new Error('Пользователь с такими данными не найден');
     }
     this.checkPasword(pass, user.password);
-    const payload = { sub: user._id, email: user.email };
-    const {password, ...result} = user.toObject();
-    return {user: result,  access_token: await this.jwtService.signAsync(payload)};
+    const payload = { sub: user._id, email: user.email, roles: role };
+    const { password, ...result } = user.toObject();
+    return { user: result, access_token: await this.jwtService.signAsync(payload) };
   }
 
-  public async findUserByPhoneNumberAndPassword(
-    role: string,
-    phone_number: string,
-    pass: string,
-  ) {
+  public async findUserByPhoneNumberAndPassword(role: string, phone_number: string, pass: string) {
     const model = this.getModelByRole(role);
     const user = await model.findOne({ phone_number }).exec();
     if (!user) {
       throw new Error('Пользователь с такими данными не найден');
     }
     this.checkPasword(pass, user.password);
-    const payload = { sub: user._id, phone_number: user.phone_number };
-    const {password, ...result} = user.toObject();
-    return {user: result,  access_token: await this.jwtService.signAsync(payload)};
+    const payload = { sub: user._id, phone_number: user.phone_number, roles: role };
+    const { password, ...result } = user.toObject();
+    return { user: result, access_token: await this.jwtService.signAsync(payload) };
   }
 
   private async findUserByEmailOrPhoneNumber(role: string, email?: string, phoneNumber?: string) {
@@ -105,7 +101,7 @@ export class UsersService {
       throw new Error('Произошла ошибка при регистрации пользователя');
     }
     const { password, ...result } = newUser.toObject();
-    const payload = { sub: newUser._id, phone_number: newUser.phone_number };
+    const payload = { sub: newUser._id, phone_number: newUser.phone_number, roles: role };
 
     return { user: result, access_token: await this.jwtService.signAsync(payload) };
   }
