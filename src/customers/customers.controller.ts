@@ -13,7 +13,7 @@ import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CustomersService } from './customers.service';
 import { Customer } from './customers.schema';
 import { AuthGuard, RolesGuard } from 'src/users';
-import { Roles } from 'src/decorators';
+import { Role, Roles } from 'src/decorators';
 
 @ApiTags('Customers')
 @Controller('customers')
@@ -37,7 +37,7 @@ export class CustomersController {
   @ApiOperation({ summary: 'Получение пользователя по id' })
   @ApiResponse({ status: HttpStatus.OK, type: Customer })
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Customer')
+  @Roles(Role.Customer)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Customer | null> {
     try {
@@ -54,7 +54,7 @@ export class CustomersController {
   @ApiOperation({ summary: 'Изменение пользователя по id' })
   @ApiResponse({ status: HttpStatus.OK, type: Customer })
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Customer')
+  @Roles(Role.Customer)
   @Put(':id')
   async update(@Param('id') id: string, @Body() customer: Customer): Promise<Customer> {
     try {
@@ -77,7 +77,7 @@ export class CustomersController {
   @ApiOperation({ summary: 'Удаление пользователя по id' })
   @ApiResponse({ status: HttpStatus.OK, type: Customer })
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Customer')
+  @Roles(Role.Customer)
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Customer> {
     try {

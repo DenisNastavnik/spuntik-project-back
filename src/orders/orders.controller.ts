@@ -14,7 +14,7 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OrderService } from './orders.service';
 import { Order } from './orders.schema';
-import { Roles } from 'src/decorators';
+import { Role, Roles } from 'src/decorators';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { AuthGuard, RolesGuard } from 'src/users';
 
@@ -53,7 +53,7 @@ export class OrdersController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Customer')
+  @Roles(Role.Customer)
   @ApiOperation({ summary: 'Создание нового заказа' })
   @ApiResponse({ status: HttpStatus.CREATED, type: Order })
   @Post()
@@ -68,6 +68,8 @@ export class OrdersController {
     }
   }
 
+  // @UseGuards(AuthGuard, RolesGuard)
+  // @Roles(Role.Vendor)
   @ApiOperation({ summary: 'Изменение заказа по id' })
   @ApiResponse({ status: HttpStatus.OK, type: Order })
   @Put(':id')
@@ -90,7 +92,7 @@ export class OrdersController {
   }
 
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Customer')
+  @Roles(Role.Customer)
   @ApiOperation({ summary: 'Удаление заказа по id' })
   @ApiResponse({ status: HttpStatus.OK, type: Order })
   @Delete(':id')

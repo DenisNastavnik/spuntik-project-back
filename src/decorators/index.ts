@@ -1,4 +1,4 @@
-export { Roles, ROLES_KEY } from './roles.decorators';
+export { Roles, ROLES_KEY, Role } from './roles.decorators';
 export {
   IsEmailFormat,
   IsStrongPassword,

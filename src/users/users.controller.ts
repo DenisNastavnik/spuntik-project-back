@@ -5,6 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import { SignInUserDto } from './dto/signin-user.dto';
+import { Role } from 'src/decorators';
 
 @ApiTags('Users')
 @Controller('users')
@@ -14,7 +15,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Аутентификация пользователя по email и password' })
   @Post('/loginByEmail')
   async findByEmailAndPassword(
-    @Body('role') role: 'Vendor' | 'Customer',
+    @Body('role') role: Role,
     @Body('email') email: string,
     @Body('password') password: string,
   ): Promise<{ user: SignInUserDto; access_token: string }> {
@@ -24,7 +25,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Аутентификация пользователя по phone_number и password' })
   @Post('/loginByPhone')
   async findByPhoneNumberAndPassword(
-    @Body('role') role: 'Vendor' | 'Customer',
+    @Body('role') role: Role,
     @Body('phone_number') phone_number: string,
     @Body('password') password: string,
   ): Promise<{ user: SignInUserDto; access_token: string }> {
@@ -33,7 +34,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Регистрация нового пользователя' })
   @Post('/registration')
-  async createUser(@Body('role') role: 'Vendor' | 'Customer', @Body() userData: CreateUserDto) {
+  async createUser(@Body('role') role: Role, @Body() userData: CreateUserDto) {
     const user = plainToClass(CreateUserDto, userData);
     const errors = await validate(user);
     if (errors.length > 0) {
@@ -43,7 +44,7 @@ export class UsersController {
       );
     }
 
-    if (!role || (role !== 'Customer' && role !== 'Vendor')) {
+    if (!role || (role !== Role.Customer && Role.Vendor)) {
       throw new HttpException(
         { message: 'Некорректное значение роли пользователя' },
         HttpStatus.BAD_REQUEST,
