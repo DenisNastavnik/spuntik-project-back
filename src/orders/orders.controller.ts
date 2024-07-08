@@ -51,6 +51,7 @@ export class OrdersController {
       throw new HttpException('Ошибка при получении заказа', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
+
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('Customer')
   @ApiOperation({ summary: 'Создание нового заказа' })
@@ -70,28 +71,8 @@ export class OrdersController {
   @ApiOperation({ summary: 'Изменение заказа по id' })
   @ApiResponse({ status: HttpStatus.OK, type: Order })
   @Put(':id')
-  async update(
-    @Param('id') id: string,
-    @Body() order: Order,
-    @Body('role') role: 'Vendor' | 'Customer',
-  ): Promise<Order> {
+  async update(@Param('id') id: string, @Body() order: Order): Promise<Order> {
     try {
-      if (!role || (role !== 'Customer' && role !== 'Vendor')) {
-        throw new HttpException(
-          { message: 'Некорректное значение роли пользователя' },
-          HttpStatus.BAD_REQUEST,
-        );
-      }
-
-      if (role === 'Vendor') {
-        // Logic for Vendor role to update status
-      } else {
-        throw new HttpException(
-          { message: 'Доступ запрещен. Недостаточно прав' },
-          HttpStatus.FORBIDDEN,
-        );
-      }
-
       const updatedOrder = await this.orderService.update(id, order);
       if (!updatedOrder) {
         throw new HttpException(
