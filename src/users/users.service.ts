@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { Customer } from '../customers/customers.schema';
 import { Vendor } from 'src/vendors/vendors.schema';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hash, compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
+import { Customer } from 'src/customers';
 
 const UserRole = {
   Customer: 'Customer',

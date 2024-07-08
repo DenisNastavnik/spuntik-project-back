@@ -13,10 +13,8 @@ import { ProductsService } from './products.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Product } from './products.schema';
 import { CreateProductDto } from './dto/create-product.dto';
-import { AuthGuard } from '../users/users.guard';
-import { Roles } from '../decorators/roles.decorators';
-import { RolesGuard } from '../users/roles.guard';
-
+import { AuthGuard, RolesGuard } from 'src/users';
+import { Roles } from 'src/decorators';
 
 @ApiTags('Products')
 @Controller('products')
