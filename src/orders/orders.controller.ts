@@ -68,14 +68,30 @@ export class OrdersController {
     }
   }
 
-  // @UseGuards(AuthGuard, RolesGuard)
-  // @Roles(Role.Vendor)
   @ApiOperation({ summary: 'Изменение заказа по id' })
   @ApiResponse({ status: HttpStatus.OK, type: Order })
   @Put(':id')
-  async update(@Param('id') id: string, @Body() order: Order): Promise<Order> {
+  async update(
+    @Param('id') id: string,
+    @Body() order: Order,
+    @Body('role') role: Role,
+  ): Promise<Order> {
     try {
-      const updatedOrder = await this.orderService.update(id, order);
+      if (!role || (role !== Role.Customer && role !== Role.Vendor)) {
+        throw new HttpException(
+          { message: 'Некорректное значение роли пользователя' },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      let updatedOrder: null | Order = null;
+
+      if (role === Role.Vendor) {
+        updatedOrder = await this.orderService.updateStatus(id, order.status);
+      } else if (role === Role.Customer) {
+        updatedOrder = await this.orderService.update(id, order);
+      }
+
       if (!updatedOrder) {
         throw new HttpException(
           'Не удалось обновить данные заказа',

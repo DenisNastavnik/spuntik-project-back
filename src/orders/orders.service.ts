@@ -33,6 +33,16 @@ export class OrderService {
     return result;
   }
 
+  async updateStatus(id: string, status: string): Promise<Order> {
+    const result = await this.ordersModel.findById(id).exec();
+    if (!result) {
+      throw new Error(`Заказ с id ${id} для обновления статуса не найден`);
+    }
+
+    result.status = status;
+    return result;
+  }
+
   async delete(id: string): Promise<Order> {
     const result = await this.ordersModel.findByIdAndDelete(id);
     if (result === null) {
