@@ -20,7 +20,7 @@ export class VendorsController {
   constructor(private readonly vendorsService: VendorsService) {}
 
   @ApiOperation({ summary: 'Получение всех пользователей' })
-  @ApiResponse({ status: 200, type: [Vendor] })
+  @ApiResponse({ status: HttpStatus.OK, type: [Vendor] })
   @Get()
   async findAll(): Promise<Vendor[]> {
     try {
@@ -34,7 +34,7 @@ export class VendorsController {
   }
 
   @ApiOperation({ summary: 'Получение пользователя по id' })
-  @ApiResponse({ status: 200, type: Vendor })
+  @ApiResponse({ status: HttpStatus.OK, type: Vendor })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('Vendor')
   @Get(':id')
@@ -51,7 +51,7 @@ export class VendorsController {
   }
 
   @ApiOperation({ summary: 'Изменение пользователя по id' })
-  @ApiResponse({ status: 200, type: Vendor })
+  @ApiResponse({ status: HttpStatus.OK, type: Vendor })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('Vendor')
   @Put(':id')
@@ -74,7 +74,7 @@ export class VendorsController {
   }
 
   @ApiOperation({ summary: 'Удаление пользователя по id' })
-  @ApiResponse({ status: 200, type: Vendor })
+  @ApiResponse({ status: HttpStatus.OK, type: Vendor })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('Vendor')
   @Delete(':id')

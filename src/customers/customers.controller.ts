@@ -21,7 +21,7 @@ export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
   @ApiOperation({ summary: 'Получение всех пользователей' })
-  @ApiResponse({ status: 200, type: [Customer] })
+  @ApiResponse({ status: HttpStatus.OK, type: [Customer] })
   @Get()
   async findAll(): Promise<Customer[]> {
     try {
@@ -35,7 +35,7 @@ export class CustomersController {
   }
 
   @ApiOperation({ summary: 'Получение пользователя по id' })
-  @ApiResponse({ status: 200, type: Customer })
+  @ApiResponse({ status: HttpStatus.OK, type: Customer })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('Customer')
   @Get(':id')
@@ -52,7 +52,7 @@ export class CustomersController {
   }
 
   @ApiOperation({ summary: 'Изменение пользователя по id' })
-  @ApiResponse({ status: 200, type: Customer })
+  @ApiResponse({ status: HttpStatus.OK, type: Customer })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('Customer')
   @Put(':id')
@@ -75,7 +75,7 @@ export class CustomersController {
   }
 
   @ApiOperation({ summary: 'Удаление пользователя по id' })
-  @ApiResponse({ status: 200, type: Customer })
+  @ApiResponse({ status: HttpStatus.OK, type: Customer })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('Customer')
   @Delete(':id')

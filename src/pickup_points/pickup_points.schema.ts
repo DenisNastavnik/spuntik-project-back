@@ -7,7 +7,7 @@ export class PickupPoint {
   @Prop({ type: String })
   logitude: string;
 
-  @ApiProperty({ example: '200', description: 'Ширина' })
+  @ApiProperty({ example: 'HttpStatus.OK', description: 'Ширина' })
   @Prop({ type: String })
   latitude: string;
 

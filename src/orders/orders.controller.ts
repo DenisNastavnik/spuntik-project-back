@@ -24,7 +24,7 @@ export class OrdersController {
   constructor(private readonly orderService: OrderService) {}
 
   @ApiOperation({ summary: 'Получение всех заказов' })
-  @ApiResponse({ status: 200, type: [Order] })
+  @ApiResponse({ status: HttpStatus.OK, type: [Order] })
   @Get()
   async findAll(): Promise<Order[]> {
     try {
@@ -38,7 +38,7 @@ export class OrdersController {
   }
 
   @ApiOperation({ summary: 'Получение заказа по id' })
-  @ApiResponse({ status: 200, type: Order })
+  @ApiResponse({ status: HttpStatus.OK, type: Order })
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Order | null> {
     try {
@@ -54,7 +54,7 @@ export class OrdersController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('Customer')
   @ApiOperation({ summary: 'Создание нового заказа' })
-  @ApiResponse({ status: 201, type: Order })
+  @ApiResponse({ status: HttpStatus.CREATED, type: Order })
   @Post()
   async create(
     @Body(new ValidationPipe({ transform: true })) order: CreateOrderDto,
@@ -67,13 +67,31 @@ export class OrdersController {
     }
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Customer')
   @ApiOperation({ summary: 'Изменение заказа по id' })
-  @ApiResponse({ status: 200, type: Order })
+  @ApiResponse({ status: HttpStatus.OK, type: Order })
   @Put(':id')
-  async update(@Param('id') id: string, @Body() order: Order): Promise<Order> {
+  async update(
+    @Param('id') id: string,
+    @Body() order: Order,
+    @Body('role') role: 'Vendor' | 'Customer',
+  ): Promise<Order> {
     try {
+      if (!role || (role !== 'Customer' && role !== 'Vendor')) {
+        throw new HttpException(
+          { message: 'Некорректное значение роли пользователя' },
+          HttpStatus.BAD_REQUEST,
+        );
+      }
+
+      if (role === 'Vendor') {
+        // Logic for Vendor role to update status
+      } else {
+        throw new HttpException(
+          { message: 'Доступ запрещен. Недостаточно прав' },
+          HttpStatus.FORBIDDEN,
+        );
+      }
+
       const updatedOrder = await this.orderService.update(id, order);
       if (!updatedOrder) {
         throw new HttpException(
@@ -93,7 +111,7 @@ export class OrdersController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles('Customer')
   @ApiOperation({ summary: 'Удаление заказа по id' })
-  @ApiResponse({ status: 200, type: Order })
+  @ApiResponse({ status: HttpStatus.OK, type: Order })
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Order> {
     try {

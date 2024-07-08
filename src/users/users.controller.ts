@@ -14,7 +14,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Аутентификация пользователя по email и password' })
   @Post('/loginByEmail')
   async findByEmailAndPassword(
-    @Body('role') role: string,
+    @Body('role') role: 'Vendor' | 'Customer',
     @Body('email') email: string,
     @Body('password') password: string,
   ): Promise<{ user: SignInUserDto; access_token: string }> {
@@ -24,7 +24,7 @@ export class UsersController {
   @ApiOperation({ summary: 'Аутентификация пользователя по phone_number и password' })
   @Post('/loginByPhone')
   async findByPhoneNumberAndPassword(
-    @Body('role') role: string,
+    @Body('role') role: 'Vendor' | 'Customer',
     @Body('phone_number') phone_number: string,
     @Body('password') password: string,
   ): Promise<{ user: SignInUserDto; access_token: string }> {
@@ -33,7 +33,7 @@ export class UsersController {
 
   @ApiOperation({ summary: 'Регистрация нового пользователя' })
   @Post('/registration')
-  async createUser(@Body('role') role: string, @Body() userData: CreateUserDto) {
+  async createUser(@Body('role') role: 'Vendor' | 'Customer', @Body() userData: CreateUserDto) {
     const user = plainToClass(CreateUserDto, userData);
     const errors = await validate(user);
     if (errors.length > 0) {
