@@ -8,7 +8,7 @@ export class PickupPointsController {
   constructor(private readonly pickupPointsService: PickupPointsService) {}
 
   @ApiOperation({ summary: 'Получение списка всех точек выдачи' })
-  @ApiResponse({ status: 200, type: [PickupPoint] })
+  @ApiResponse({ status: HttpStatus.OK, type: [PickupPoint] })
   @Get()
   async findAll(): Promise<PickupPoint[]> {
     try {

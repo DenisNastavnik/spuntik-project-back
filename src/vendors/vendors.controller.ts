@@ -12,16 +12,15 @@ import {
 import { VendorsService } from './vendors.service';
 import { Vendor } from './vendors.schema';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AuthGuard } from '../users/users.guard';
-import { Roles } from '../decorators/roles.decorators';
-import { RolesGuard } from '../users/roles.guard';
+import { AuthGuard, RolesGuard } from 'src/users';
+import { Role, Roles } from 'src/decorators';
 
 @Controller('vendors')
 export class VendorsController {
   constructor(private readonly vendorsService: VendorsService) {}
 
   @ApiOperation({ summary: 'Получение всех пользователей' })
-  @ApiResponse({ status: 200, type: [Vendor] })
+  @ApiResponse({ status: HttpStatus.OK, type: [Vendor] })
   @Get()
   async findAll(): Promise<Vendor[]> {
     try {
@@ -35,9 +34,9 @@ export class VendorsController {
   }
 
   @ApiOperation({ summary: 'Получение пользователя по id' })
-  @ApiResponse({ status: 200, type: Vendor })
+  @ApiResponse({ status: HttpStatus.OK, type: Vendor })
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Vendor')
+  @Roles(Role.Vendor)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Vendor | null> {
     try {
@@ -52,9 +51,9 @@ export class VendorsController {
   }
 
   @ApiOperation({ summary: 'Изменение пользователя по id' })
-  @ApiResponse({ status: 200, type: Vendor })
+  @ApiResponse({ status: HttpStatus.OK, type: Vendor })
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Vendor')
+  @Roles(Role.Vendor)
   @Put(':id')
   async update(@Param('id') id: string, @Body() vendor: Vendor): Promise<Vendor> {
     try {
@@ -75,9 +74,9 @@ export class VendorsController {
   }
 
   @ApiOperation({ summary: 'Удаление пользователя по id' })
-  @ApiResponse({ status: 200, type: Vendor })
+  @ApiResponse({ status: HttpStatus.OK, type: Vendor })
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Vendor')
+  @Roles(Role.Vendor)
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Vendor> {
     try {

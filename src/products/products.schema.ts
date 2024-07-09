@@ -32,7 +32,7 @@ export class Product {
   rating: number;
 
   @ApiProperty({
-    example: 'https://picsum.photos/id/230/200/300',
+    example: 'https://picsum.photos/id/230/HttpStatus.OK/300',
     description: 'Идентификатор миниатюрного изображения',
   })
   @Prop({ type: String })
@@ -40,9 +40,9 @@ export class Product {
 
   @ApiProperty({
     example: [
-      'https://picsum.photos/id/22/200/300',
-      'https://picsum.photos/id/23/200/300',
-      'https://picsum.photos/id/24/200/300',
+      'https://picsum.photos/id/22/HttpStatus.OK/300',
+      'https://picsum.photos/id/23/HttpStatus.OK/300',
+      'https://picsum.photos/id/24/HttpStatus.OK/300',
     ],
     description: 'Массив идентификаторов изображений',
   })

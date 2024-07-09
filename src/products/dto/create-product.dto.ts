@@ -38,14 +38,14 @@ export class CreateProductDto {
   ])
   readonly category: string;
 
-  @ApiProperty({ example: 'https://picsum.photos/200', description: 'Thumbnail' })
+  @ApiProperty({ example: 'https://picsum.photos/HttpStatus.OK', description: 'Thumbnail' })
   @IsString()
   @IsNotEmpty()
   readonly thumbnail: string;
 
   @ApiProperty({
     example:
-      '["https://picsum.photos/id/4/200/300", "https://picsum.photos/id/1/200/300", "https://picsum.photos/id/8/200/300"]',
+      '["https://picsum.photos/id/4/HttpStatus.OK/300", "https://picsum.photos/id/1/HttpStatus.OK/300", "https://picsum.photos/id/8/HttpStatus.OK/300"]',
     description: 'Images',
   })
   @IsNotEmpty()

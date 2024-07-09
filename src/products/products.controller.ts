@@ -8,15 +8,14 @@ import {
   Put,
   ValidationPipe,
   UseGuards,
+  HttpStatus,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Product } from './products.schema';
 import { CreateProductDto } from './dto/create-product.dto';
-import { AuthGuard } from '../users/users.guard';
-import { Roles } from '../decorators/roles.decorators';
-import { RolesGuard } from '../users/roles.guard';
-
+import { AuthGuard, RolesGuard } from 'src/users';
+import { Role, Roles } from 'src/decorators';
 
 @ApiTags('Products')
 @Controller('products')
@@ -24,7 +23,7 @@ export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @ApiOperation({ summary: 'Получение всех товаров' })
-  @ApiResponse({ status: 200, type: [Product] })
+  @ApiResponse({ status: HttpStatus.OK, type: [Product] })
   @Get('/')
   async findAll(): Promise<Product[]> {
     return await this.productsService.findAll();
@@ -37,16 +36,16 @@ export class ProductsController {
   }
 
   @ApiOperation({ summary: 'Получение товара по id' })
-  @ApiResponse({ status: 200, type: Product })
+  @ApiResponse({ status: HttpStatus.OK, type: Product })
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Product | null> {
     return await this.productsService.findOne(id);
   }
 
   @ApiOperation({ summary: 'Создание нового товара' })
-  @ApiResponse({ status: 200, type: Product })
+  @ApiResponse({ status: HttpStatus.OK, type: Product })
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Vendor')
+  @Roles(Role.Vendor)
   @Post('/create')
   async create(
     @Body(new ValidationPipe({ transform: true })) product: CreateProductDto,
@@ -55,18 +54,18 @@ export class ProductsController {
   }
 
   @ApiOperation({ summary: 'Изменение товара' })
-  @ApiResponse({ status: 200, type: Product })
+  @ApiResponse({ status: HttpStatus.OK, type: Product })
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Vendor')
+  @Roles(Role.Vendor)
   @Put(':id')
   async update(@Param('id') id: string, @Body() product: Product): Promise<Product> {
     return await this.productsService.update(id, product);
   }
 
   @ApiOperation({ summary: 'Удаление товара' })
-  @ApiResponse({ status: 200, type: Product })
+  @ApiResponse({ status: HttpStatus.OK, type: Product })
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Vendor')
+  @Roles(Role.Vendor)
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Product> {
     return await this.productsService.delete(id);

@@ -12,9 +12,8 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CustomersService } from './customers.service';
 import { Customer } from './customers.schema';
-import { AuthGuard } from '../users/users.guard';
-import { Roles } from '../decorators/roles.decorators';
-import { RolesGuard } from '../users/roles.guard';
+import { AuthGuard, RolesGuard } from 'src/users';
+import { Role, Roles } from 'src/decorators';
 
 @ApiTags('Customers')
 @Controller('customers')
@@ -22,7 +21,7 @@ export class CustomersController {
   constructor(private readonly customersService: CustomersService) {}
 
   @ApiOperation({ summary: 'Получение всех пользователей' })
-  @ApiResponse({ status: 200, type: [Customer] })
+  @ApiResponse({ status: HttpStatus.OK, type: [Customer] })
   @Get()
   async findAll(): Promise<Customer[]> {
     try {
@@ -36,9 +35,9 @@ export class CustomersController {
   }
 
   @ApiOperation({ summary: 'Получение пользователя по id' })
-  @ApiResponse({ status: 200, type: Customer })
+  @ApiResponse({ status: HttpStatus.OK, type: Customer })
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Customer')
+  @Roles(Role.Customer)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Customer | null> {
     try {
@@ -53,9 +52,9 @@ export class CustomersController {
   }
 
   @ApiOperation({ summary: 'Изменение пользователя по id' })
-  @ApiResponse({ status: 200, type: Customer })
+  @ApiResponse({ status: HttpStatus.OK, type: Customer })
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Customer')
+  @Roles(Role.Customer)
   @Put(':id')
   async update(@Param('id') id: string, @Body() customer: Customer): Promise<Customer> {
     try {
@@ -76,9 +75,9 @@ export class CustomersController {
   }
 
   @ApiOperation({ summary: 'Удаление пользователя по id' })
-  @ApiResponse({ status: 200, type: Customer })
+  @ApiResponse({ status: HttpStatus.OK, type: Customer })
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles('Customer')
+  @Roles(Role.Customer)
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<Customer> {
     try {
