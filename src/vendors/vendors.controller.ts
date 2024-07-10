@@ -12,8 +12,8 @@ import {
 import { VendorsService } from './vendors.service';
 import { Vendor } from './vendors.schema';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
-import { AuthGuard, RolesGuard } from 'src/users';
-import { Role, Roles } from 'src/decorators';
+import { AuthGuard, RolesGuard } from '../users';
+import { Role, Roles } from '../decorators';
 
 @Controller('vendors')
 export class VendorsController {

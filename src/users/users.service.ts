@@ -4,8 +4,8 @@ import { InjectModel } from '@nestjs/mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { hash, compare } from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { Customer } from 'src/customers';
-import { Vendor } from 'src/vendors';
+import { Customer } from '../customers';
+import { Vendor } from '../vendors';
 
 const UserRole = {
   Customer: 'Customer',

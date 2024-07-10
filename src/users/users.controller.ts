@@ -5,7 +5,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { validate } from 'class-validator';
 import { plainToClass } from 'class-transformer';
 import { SignInUserDto } from './dto/signin-user.dto';
-import { Role } from 'src/decorators';
+import { Role } from '../decorators';
 
 @ApiTags('Users')
 @Controller('users')

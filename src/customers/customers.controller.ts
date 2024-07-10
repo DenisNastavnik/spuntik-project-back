@@ -12,8 +12,8 @@ import {
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CustomersService } from './customers.service';
 import { Customer } from './customers.schema';
-import { AuthGuard, RolesGuard } from 'src/users';
-import { Role, Roles } from 'src/decorators';
+import { AuthGuard, RolesGuard } from '../users';
+import { Role, Roles } from '../decorators';
 
 @ApiTags('Customers')
 @Controller('customers')

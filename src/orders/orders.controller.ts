@@ -16,7 +16,7 @@ import { OrderService } from './orders.service';
 import { Order } from './orders.schema';
 import { Role, Roles } from 'src/decorators';
 import { CreateOrderDto } from './dto/create-order.dto';
-import { AuthGuard, RolesGuard } from 'src/users';
+import { AuthGuard, RolesGuard } from '../users';
 
 @ApiTags('Orders')
 @Controller('orders')
