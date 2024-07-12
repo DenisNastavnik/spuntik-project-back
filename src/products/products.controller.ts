@@ -35,6 +35,12 @@ export class ProductsController {
     return await this.productsService.findAllCategories();
   }
 
+  @ApiOperation({ summary: 'Получение продуктов по категории' })
+  @Post()
+  async findProductsByCategory(@Body('category') category: string): Promise<Product[]> {
+    return this.productsService.findProductsByCategory(category);
+  }
+
   @ApiOperation({ summary: 'Получение товара по id' })
   @ApiResponse({ status: HttpStatus.OK, type: Product })
   @Get(':id')
