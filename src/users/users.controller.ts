@@ -44,7 +44,7 @@ export class UsersController {
       );
     }
 
-    if (!role || (role !== Role.Customer && Role.Vendor)) {
+    if (!role || (role !== Role.Customer && role !== Role.Vendor)) {
       throw new HttpException(
         { message: 'Некорректное значение роли пользователя' },
         HttpStatus.BAD_REQUEST,
