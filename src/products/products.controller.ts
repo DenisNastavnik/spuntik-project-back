@@ -9,6 +9,7 @@ import {
   ValidationPipe,
   UseGuards,
   HttpStatus,
+  Query,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -37,8 +38,76 @@ export class ProductsController {
 
   @ApiOperation({ summary: 'Получение продуктов по категории' })
   @Post()
-  async findProductsByCategory(@Body('category') category: string): Promise<Product[]> {
-    return this.productsService.findProductsByCategory(category);
+  async findProductsByCategory(
+    @Body('category') category: string,
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+  ): Promise<Product[]> {
+    const pageNum = parseInt(page, 10);
+    const limitNum = parseInt(limit, 10);
+    return this.productsService.findProductsByCategory(category, pageNum, limitNum);
+  }
+
+  @ApiOperation({ summary: 'Получение характеристик для фильтра' })
+  @Get('/characteristic')
+  async findCharacteristic(): Promise<string[]> {
+    return this.productsService.findCharacteristic();
+  }
+
+  @ApiOperation({
+    summary: 'Получение продуктов по фильтру',
+  })
+  @Post('/filter')
+  async findProductsByFilter(
+    @Body('category') category: string,
+    @Body('characteristics') characteristics?: string[][],
+    @Body('rating') rating?: number,
+    @Body('min') min?: number,
+    @Body('max') max?: number,
+    @Query('page') page = '1',
+    @Query('limit') limit = '10',
+  ): Promise<{ products: Product[]; totalPages: number }> {
+    interface ICharacteristic {
+      characteristic: string;
+      value: string;
+    }
+
+    interface IFilter {
+      characteristics: ICharacteristic[];
+      rating?: number;
+      min?: number;
+      max?: number;
+    }
+
+    const pageNum = parseInt(page, 10);
+    const limitNum = parseInt(limit, 10);
+
+    const filters: IFilter = {
+      characteristics: [],
+    };
+
+    if (characteristics && characteristics.length > 0) {
+      characteristics.map((characteristic) => {
+        filters.characteristics.push({
+          characteristic: characteristic[0],
+          value: characteristic[1],
+        });
+      });
+    }
+
+    if (rating !== undefined) {
+      filters.rating = rating;
+    }
+
+    if (min !== undefined) {
+      filters.min = min;
+    }
+
+    if (max !== undefined) {
+      filters.max = max;
+    }
+
+    return this.productsService.findProductsByFilter(category, filters, pageNum, limitNum);
   }
 
   @ApiOperation({ summary: 'Получение товара по id' })
