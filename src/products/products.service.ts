@@ -3,6 +3,7 @@ import { Model } from 'mongoose';
 import { Product } from './products.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { CreateProductDto } from './dto/create-product.dto';
+import { IFilters, IMatch } from './products.types';
 
 @Injectable()
 export class ProductsService {
@@ -21,58 +22,47 @@ export class ProductsService {
     return Array.from(categories);
   }
 
-  async findProductsByFilter(
+  async findProductsFilteredAndSorted(
     category: string,
-    filters: {
-      characteristics?: { characteristic: string; value: string }[];
-      min?: number;
-      max?: number;
-      rating?: number;
-    },
+    filters: IFilters,
+    sortBy: string,
+    order: 'asc' | 'desc',
     page: number,
     limit: number,
   ): Promise<{ products: Product[]; totalPages: number }> {
     const skip = (page - 1) * limit;
-    const filterConditions = [];
+    const sortOrder: 1 | -1 = order === 'asc' ? 1 : -1;
 
-    filterConditions.push({ category: category });
+    const match: IMatch = { category };
 
-    if (filters.characteristics && filters.characteristics.length > 0) {
-      filters.characteristics.forEach((characteristic) => {
-        filterConditions.push({
-          characteristic: {
-            $elemMatch: {
-              0: characteristic.characteristic,
-              1: characteristic.value,
-            },
-          },
-        });
+    if (filters.characteristics.length > 0) {
+      filters.characteristics.forEach(({ characteristic, value }) => {
+        match.characteristic = {
+          $elemMatch: { 0: characteristic, 1: value },
+        };
       });
     }
 
-    if (filters.min !== undefined && filters.max !== undefined) {
-      filterConditions.push({
-        $and: [{ price: { $gte: filters.min } }, { price: { $lte: filters.max } }],
-      });
-    }
-
-    if (filters.min !== undefined) {
-      filterConditions.push({ price: { $gte: filters.min } });
-    }
-
-    if (filters.max !== undefined) {
-      filterConditions.push({ price: { $lte: filters.max } });
+    if (filters.min !== undefined || filters.max !== undefined) {
+      match.price = {};
+      if (filters.min !== undefined) match.price.$gte = filters.min;
+      if (filters.max !== undefined) match.price.$lte = filters.max;
     }
 
     if (filters.rating !== undefined) {
-      filterConditions.push({ rating: { $gte: filters.rating } });
+      match.rating = { $gte: filters.rating };
     }
 
-    const filter = filterConditions.length > 0 ? { $and: filterConditions } : {};
+    const pipeline = [
+      { $match: match },
+      { $sort: { [sortBy]: sortOrder } },
+      { $skip: skip },
+      { $limit: limit },
+    ];
 
     const [products, total] = await Promise.all([
-      this.productModel.find(filter).skip(skip).limit(limit).exec(),
-      this.productModel.countDocuments(filter),
+      this.productModel.aggregate(pipeline).exec(),
+      this.productModel.countDocuments(match),
     ]);
 
     const totalPages = Math.ceil(total / limit);
