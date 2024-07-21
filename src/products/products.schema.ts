@@ -69,6 +69,9 @@ export class Product {
   @ApiProperty({ example: [['Состав наполнителя', 'Глина']], description: 'Характеристики товара' })
   @Prop()
   characteristic: string[][];
+
+  @Prop({ type: Date, default: Date.now })
+  createdAt: Date;
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);

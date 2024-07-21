@@ -57,57 +57,39 @@ export class ProductsController {
   @ApiOperation({
     summary: 'Получение продуктов по фильтру',
   })
-  @Post('/filter')
-  async findProductsByFilter(
+  @Post('/processed')
+  async findProductsFilteredAndSorted(
     @Body('category') category: string,
-    @Body('characteristics') characteristics?: string[][],
+    @Body('characteristics') characteristics: string[][] = [],
     @Body('rating') rating?: number,
     @Body('min') min?: number,
     @Body('max') max?: number,
+    @Body('sortBy') sortBy: string = 'createdAt',
+    @Body('order') order: 'asc' | 'desc' = 'desc',
     @Query('page') page = '1',
     @Query('limit') limit = '10',
   ): Promise<{ products: Product[]; totalPages: number }> {
-    interface ICharacteristic {
-      characteristic: string;
-      value: string;
-    }
-
-    interface IFilter {
-      characteristics: ICharacteristic[];
-      rating?: number;
-      min?: number;
-      max?: number;
-    }
-
     const pageNum = parseInt(page, 10);
     const limitNum = parseInt(limit, 10);
 
-    const filters: IFilter = {
-      characteristics: [],
+    const filters = {
+      characteristics: characteristics.map(([characteristic, value]) => ({
+        characteristic,
+        value,
+      })),
+      rating,
+      min,
+      max,
     };
 
-    if (characteristics && characteristics.length > 0) {
-      characteristics.map((characteristic) => {
-        filters.characteristics.push({
-          characteristic: characteristic[0],
-          value: characteristic[1],
-        });
-      });
-    }
-
-    if (rating !== undefined) {
-      filters.rating = rating;
-    }
-
-    if (min !== undefined) {
-      filters.min = min;
-    }
-
-    if (max !== undefined) {
-      filters.max = max;
-    }
-
-    return this.productsService.findProductsByFilter(category, filters, pageNum, limitNum);
+    return this.productsService.findProductsFilteredAndSorted(
+      category,
+      filters,
+      sortBy,
+      order,
+      pageNum,
+      limitNum,
+    );
   }
 
   @ApiOperation({ summary: 'Получение товара по id' })
