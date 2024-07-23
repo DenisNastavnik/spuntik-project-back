@@ -24,7 +24,7 @@ export class SignInUserDto {
 
   readonly orders?: [mongoose.Schema.Types.ObjectId];
 
-  readonly reviews?: [mongoose.Schema.Types.ObjectId];
+  readonly reviews?: mongoose.Types.ObjectId;
 
   readonly company_name?: string;
 
