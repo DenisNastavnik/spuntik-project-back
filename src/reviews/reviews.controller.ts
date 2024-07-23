@@ -69,7 +69,6 @@ export class ReviewsController {
       }
       return review;
     } catch (error) {
-      console.log(error);
       throw new HttpException('Ошибка при получении отзыва', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
@@ -135,7 +134,6 @@ export class ReviewsController {
     try {
       return await this.reviewsService.delete(id);
     } catch (error) {
-      console.log(error);
       throw new HttpException('Ошибка при удалении отзыва', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
