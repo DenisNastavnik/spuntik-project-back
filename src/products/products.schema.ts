@@ -49,11 +49,11 @@ export class Product {
   @Prop([String])
   images: string[];
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId }] })
-  reviews: [mongoose.Schema.Types.ObjectId];
+  @Prop({ type: [{ type: mongoose.Types.ObjectId, ref: 'Review' }] })
+  reviews: mongoose.Types.ObjectId[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  vendor_id: [mongoose.Schema.Types.ObjectId];
+  @Prop({ type: mongoose.Types.ObjectId, ref: 'Customer' })
+  vendor_id: [mongoose.Types.ObjectId];
 
   @Prop({ type: Number })
   reviews_count: number;
