@@ -17,6 +17,8 @@ import { AuthGuard, RolesGuard } from '../users';
 import { Role, Roles } from '../decorators';
 import { CreateReviewDto } from './dto/create-review.dto';
 import { Review } from './reviews.schema';
+import { UpdateReviewDto } from './dto/update-review.dto';
+import { ReviewResponseDto } from './dto/review-with-product-fields';
 
 @ApiTags('Reviews')
 @Controller('reviews')
@@ -24,7 +26,7 @@ export class ReviewsController {
   constructor(private readonly reviewsService: ReviewsService) {}
 
   @ApiOperation({ summary: 'Создание нового отзыва' })
-  @ApiResponse({ status: HttpStatus.OK, type: Review })
+  @ApiResponse({ status: HttpStatus.OK, type: ReviewResponseDto })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Customer)
   @Post('/create')
@@ -39,7 +41,7 @@ export class ReviewsController {
   }
 
   @ApiOperation({ summary: 'Получение всех отзывов' })
-  @ApiResponse({ status: HttpStatus.OK, type: [Review] })
+  @ApiResponse({ status: HttpStatus.OK, type: [ReviewResponseDto] })
   @Get('/')
   async findAll(): Promise<Review[]> {
     try {
@@ -57,7 +59,7 @@ export class ReviewsController {
   }
 
   @ApiOperation({ summary: 'Получение отзыва по id' })
-  @ApiResponse({ status: HttpStatus.OK, type: Review })
+  @ApiResponse({ status: HttpStatus.OK, type: ReviewResponseDto })
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Review> {
     try {
@@ -67,12 +69,13 @@ export class ReviewsController {
       }
       return review;
     } catch (error) {
+      console.log(error);
       throw new HttpException('Ошибка при получении отзыва', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   @ApiOperation({ summary: 'Получение отзывов по id' })
-  @ApiResponse({ status: HttpStatus.OK, type: [Review] })
+  @ApiResponse({ status: HttpStatus.OK, type: [ReviewResponseDto] })
   @ApiBody({
     schema: {
       properties: {
@@ -102,11 +105,11 @@ export class ReviewsController {
   }
 
   @ApiOperation({ summary: 'Изменение отзыва' })
-  @ApiResponse({ status: HttpStatus.OK, type: Review })
+  @ApiResponse({ status: HttpStatus.OK, type: ReviewResponseDto })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Customer)
   @Put(':id')
-  async update(@Param('id') id: string, @Body() product: Review): Promise<Review> {
+  async update(@Param('id') id: string, @Body() product: UpdateReviewDto): Promise<Review> {
     try {
       const updatedReview = await this.reviewsService.update(id, product);
 
@@ -124,7 +127,7 @@ export class ReviewsController {
   }
 
   @ApiOperation({ summary: 'Удаление отзыва' })
-  @ApiResponse({ status: HttpStatus.OK, type: Review })
+  @ApiResponse({ status: HttpStatus.OK, type: ReviewResponseDto })
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Customer)
   @Delete(':id')
@@ -132,6 +135,7 @@ export class ReviewsController {
     try {
       return await this.reviewsService.delete(id);
     } catch (error) {
+      console.log(error);
       throw new HttpException('Ошибка при удалении отзыва', HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }

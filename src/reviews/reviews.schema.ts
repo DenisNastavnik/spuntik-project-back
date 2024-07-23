@@ -9,12 +9,12 @@ export class Review {
   customer_fullname: string;
 
   @ApiProperty({ example: '666fe22053ea02ab64d03359', description: 'Product id' })
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  product_id: [mongoose.Schema.Types.ObjectId];
+  @Prop({ type: mongoose.Types.ObjectId, ref: 'Product' })
+  product_id: mongoose.Types.ObjectId;
 
   @ApiProperty({ example: '666fe22053ea02ab64d03359', description: 'Customer id' })
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  customer_id: [mongoose.Schema.Types.ObjectId];
+  @Prop({ type: mongoose.Types.ObjectId, ref: 'Customer' })
+  customer_id: mongoose.Types.ObjectId;
 
   @ApiProperty({ example: 4, description: 'Рейтинг' })
   @Prop({ type: Number })
