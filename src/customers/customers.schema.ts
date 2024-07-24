@@ -33,8 +33,8 @@ export class Customer {
   @Prop({ type: mongoose.Schema.Types.ObjectId })
   orders: [mongoose.Schema.Types.ObjectId];
 
-  @Prop({ type: mongoose.Types.ObjectId, ref: 'Review' })
-  reviews: mongoose.Types.ObjectId;
+  @Prop({ type: [{ type: mongoose.Types.ObjectId, ref: 'Review' }] })
+  reviews: mongoose.Types.ObjectId[];
 }
 
 export const CustomerSchema = SchemaFactory.createForClass(Customer);

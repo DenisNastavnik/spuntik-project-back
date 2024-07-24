@@ -31,10 +31,10 @@ export class ReviewsController {
   @Roles(Role.Customer)
   @Post('/create')
   async create(
-    @Body(new ValidationPipe({ transform: true })) product: CreateReviewDto,
+    @Body(new ValidationPipe({ transform: true })) review: CreateReviewDto,
   ): Promise<Review> {
     try {
-      return await this.reviewsService.create(product);
+      return await this.reviewsService.create(review);
     } catch (error) {
       throw new HttpException('Ошибка при создании отзыва', HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -108,9 +108,9 @@ export class ReviewsController {
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(Role.Customer)
   @Put(':id')
-  async update(@Param('id') id: string, @Body() product: UpdateReviewDto): Promise<Review> {
+  async update(@Param('id') id: string, @Body() review: UpdateReviewDto): Promise<Review> {
     try {
-      const updatedReview = await this.reviewsService.update(id, product);
+      const updatedReview = await this.reviewsService.update(id, review);
 
       if (!updatedReview) {
         throw new HttpException(

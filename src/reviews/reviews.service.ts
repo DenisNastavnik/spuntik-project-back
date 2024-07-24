@@ -22,7 +22,7 @@ export class ReviewsService {
     });
 
     await this.customersModel
-      .findByIdAndUpdate(newReview.customer_id, { reviews: newReview._id })
+      .findByIdAndUpdate(newReview.customer_id, { $push: { reviews: newReview._id } })
       .exec();
 
     await this.productModel
@@ -77,15 +77,16 @@ export class ReviewsService {
   async delete(id: string): Promise<Review> {
     const result = await this.reviewModel
       .findByIdAndDelete(id)
-      .populate({ path: 'product_id', select: 'name thumbnail' });
+      .populate({ path: 'product_id', select: 'name thumbnail' })
+      .exec();
 
     if (result === null) {
       throw Error(`Отзыв с ${id} не найден`);
     }
 
     await this.customersModel
-      .findByIdAndUpdate(result?.customer_id, {
-        reviews: '',
+      .findByIdAndUpdate(result.customer_id, {
+        $pull: { reviews: result._id },
       })
       .exec();
 
