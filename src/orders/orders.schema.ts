@@ -31,7 +31,7 @@ export class Order {
   pickup_point: [mongoose.Schema.Types.ObjectId];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId })
-  products: [mongoose.Schema.Types.ObjectId];
+  products: mongoose.Schema.Types.ObjectId[];
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
