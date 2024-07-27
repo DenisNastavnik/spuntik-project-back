@@ -1,4 +1,4 @@
-import { Controller, Get, HttpException, HttpStatus } from '@nestjs/common';
+import { Controller, Get, HttpException, HttpStatus, Param } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { PickupPointsService } from './pickup_points.service';
 import { PickupPoint } from './pickup_points.schema';
@@ -16,6 +16,20 @@ export class PickupPointsController {
     } catch (error) {
       throw new HttpException(
         'Ошибка при получении точек выдачи',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
+  @ApiOperation({ summary: 'Получение точки выдачи по ID' })
+  @ApiResponse({ status: HttpStatus.OK, type: PickupPoint })
+  @Get(':id')
+  async findOne(@Param('id') id: string): Promise<PickupPoint> {
+    try {
+      return await this.pickupPointsService.findPickupPointById(id);
+    } catch (error) {
+      throw new HttpException(
+        'Ошибка при получении точки выдачи',
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
