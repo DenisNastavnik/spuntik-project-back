@@ -10,6 +10,15 @@ async function bootstrap() {
     .setTitle('Sputnik Project')
     .setDescription('Documentation REST API')
     .setVersion('1.0.0')
+    .setExternalDoc('Postman Collection', '/docs-json')
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      in: 'header',
+      name: 'Authorization',
+      description: 'Enter your Bearer token',
+    })
     .addTag('Ozon Copy')
     .build();
   const document = SwaggerModule.createDocument(app, config);
