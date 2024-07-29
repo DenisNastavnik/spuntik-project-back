@@ -24,8 +24,8 @@ export class Customer {
   @Prop({ type: String })
   phone_number: string;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  featured: [mongoose.Schema.Types.ObjectId];
+  @Prop({ type: [{ type: mongoose.Types.ObjectId, ref: 'Product' }] })
+  featured: mongoose.Types.ObjectId[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId })
   cart: [mongoose.Schema.Types.ObjectId];

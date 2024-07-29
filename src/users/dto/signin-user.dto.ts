@@ -18,7 +18,7 @@ export class SignInUserDto {
   @IsNotEmpty()
   readonly phone_number: string;
 
-  readonly featured?: [mongoose.Schema.Types.ObjectId];
+  readonly featured?: mongoose.Types.ObjectId[];
 
   readonly cart?: [mongoose.Schema.Types.ObjectId];
 
