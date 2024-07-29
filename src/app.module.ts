@@ -9,6 +9,7 @@ import { PickupPointsModule } from './pickup_points/pickup_points.module';
 import { UsersModule } from './users/users.module';
 import 'dotenv/config';
 import { JwtModule } from '@nestjs/jwt';
+import { FavoritesModule } from './favorites/favorites.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { JwtModule } from '@nestjs/jwt';
     ReviewsModule,
     OrdersModule,
     PickupPointsModule,
+    FavoritesModule,
     UsersModule,
     JwtModule.register({
       global: true,
