@@ -27,14 +27,10 @@ export class MinioClientService {
       file.originalname.lastIndexOf('.'),
       file.originalname.length,
     );
-    const metaData: any = {
-      'Content-Type': file.mimetype,
-      'X-Amz-Meta-Testing': 1234,
-    };
     const filename = hashedFileName + ext;
     const fileName: string = `${filename}`;
     const fileBuffer = file.buffer;
-    this.client.putObject(baseBucket, fileName, fileBuffer, metaData, (err) => {
+    this.client.putObject(baseBucket, fileName, fileBuffer, (err) => {
       if (err) {
         throw new HttpException('Ошибка загрузки файла', HttpStatus.BAD_REQUEST);
       }
