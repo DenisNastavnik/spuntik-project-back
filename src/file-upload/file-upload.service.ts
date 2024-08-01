@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
+import { BufferedFile } from 'src/minio-client/minio-client.model';
 import { MinioClientService } from 'src/minio-client/minio-client.service';
-import { BufferedFile } from 'src/minio-client/file.model';
 
 @Injectable()
 export class FileUploadService {
@@ -15,9 +15,14 @@ export class FileUploadService {
     };
   }
 
-  async uploadMany(files: { [key: string]: BufferedFile[] }) {
+  async uploadMany(files: BufferedFile) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     const image1 = files['image1'][0];
     const uploaded_image1 = await this.minioClientService.upload(image1);
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     const image2 = files['image2'][0];
     const uploaded_image2 = await this.minioClientService.upload(image2);
 

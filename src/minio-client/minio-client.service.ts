@@ -1,13 +1,13 @@
-import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
+import { Injectable, HttpException, HttpStatus, Logger } from '@nestjs/common';
 import { MinioService } from 'nestjs-minio-client';
-import { config } from './config';
-import { BufferedFile } from './file.model';
 import * as crypto from 'crypto';
+import { BufferedFile } from './minio-client.model';
 
 @Injectable()
 export class MinioClientService {
   private readonly logger: Logger;
-  private readonly baseBucket = config.MINIO_BUCKET;
+
+  private readonly baseBucket = String(process.env.MINIO_BUCKET);
 
   public get client() {
     return this.minio.client;
@@ -37,14 +37,15 @@ export class MinioClientService {
     });
 
     return {
-      url: `${config.MINIO_ENDPOINT}:${config.MINIO_PORT}/${config.MINIO_BUCKET}/${filename}`,
+      url: `${process.env.MINIO_ENDPOINT}:${process.env.MINIO_PORT}/${process.env.MINIO_BUCKET}/${filename}`,
     };
   }
 
   async delete(objetName: string, baseBucket: string = this.baseBucket) {
     this.client.removeObject(baseBucket, objetName, (err) => {
-      if (err)
+      if (err) {
         throw new HttpException('С удалением файла что-то пошло не так', HttpStatus.BAD_REQUEST);
+      }
     });
   }
 }
