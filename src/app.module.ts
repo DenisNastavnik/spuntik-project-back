@@ -10,6 +10,7 @@ import { UsersModule } from './users/users.module';
 import 'dotenv/config';
 import { JwtModule } from '@nestjs/jwt';
 import { FavoritesModule } from './favorites/favorites.module';
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { FavoritesModule } from './favorites/favorites.module';
     PickupPointsModule,
     FavoritesModule,
     UsersModule,
+    CartModule,
     JwtModule.register({
       global: true,
       secret: `${process.env.SECRET}`,
