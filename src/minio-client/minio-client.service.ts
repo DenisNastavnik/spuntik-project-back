@@ -18,22 +18,20 @@ export class MinioClientService {
   }
 
   public async upload(file: BufferedFile, baseBucket: string = this.baseBucket) {
-    if (!(file.mimetype.includes('jpeg') || file.mimetype.includes('png'))) {
-      throw new HttpException('Недоступное расширение', HttpStatus.BAD_REQUEST);
-    }
     const temp_filename = Date.now().toString();
     const hashedFileName = crypto.createHash('md5').update(temp_filename).digest('hex');
     const ext = file.originalname.substring(
       file.originalname.lastIndexOf('.'),
       file.originalname.length,
     );
+    const metaData = {
+      'Content-Type': file.mimetype,
+    };
     const filename = hashedFileName + ext;
     const fileName: string = `${filename}`;
     const fileBuffer = file.buffer;
-    this.client.putObject(baseBucket, fileName, fileBuffer, (err) => {
-      if (err) {
-        throw new HttpException('Ошибка загрузки файла', HttpStatus.BAD_REQUEST);
-      }
+    await this.client.putObject(baseBucket, fileName, fileBuffer, metaData).catch((err) => {
+      throw new HttpException(`Ошибка загрузки файла: ${err}`, HttpStatus.BAD_REQUEST);
     });
 
     return {
