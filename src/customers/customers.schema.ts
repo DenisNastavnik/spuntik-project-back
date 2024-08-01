@@ -1,6 +1,7 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
+import { OrderProduct, OrderProductSchema } from '../cart/cart.schema';
 
 @Schema()
 export class Customer {
@@ -27,8 +28,8 @@ export class Customer {
   @Prop({ type: [{ type: mongoose.Types.ObjectId, ref: 'Product' }] })
   featured: mongoose.Types.ObjectId[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  cart: [mongoose.Schema.Types.ObjectId];
+  @Prop([{ type: OrderProductSchema }])
+  cart: OrderProduct[];
 
   @Prop({ type: mongoose.Schema.Types.ObjectId })
   orders: [mongoose.Schema.Types.ObjectId];
