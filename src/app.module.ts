@@ -12,6 +12,7 @@ import { JwtModule } from '@nestjs/jwt';
 import { FavoritesModule } from './favorites/favorites.module';
 import { MinioClientModule } from './minio-client/minio-client.module';
 import { FileUploadModule } from './file-upload/file-upload.module';
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { FileUploadModule } from './file-upload/file-upload.module';
     PickupPointsModule,
     FavoritesModule,
     UsersModule,
+    CartModule,
     JwtModule.register({
       global: true,
       secret: `${process.env.SECRET}`,

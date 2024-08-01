@@ -1,5 +1,6 @@
 import { IsString, IsNotEmpty } from 'class-validator';
 import mongoose from 'mongoose';
+import { OrderProduct } from '../../cart/cart.schema';
 
 export class SignInUserDto {
   @IsString()
@@ -20,7 +21,7 @@ export class SignInUserDto {
 
   readonly featured?: mongoose.Types.ObjectId[];
 
-  readonly cart?: [mongoose.Schema.Types.ObjectId];
+  readonly cart?: OrderProduct[];
 
   readonly orders?: [mongoose.Schema.Types.ObjectId];
 
