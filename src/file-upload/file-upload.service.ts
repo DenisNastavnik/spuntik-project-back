@@ -32,4 +32,12 @@ export class FileUploadService {
       message: 'Файлы загружены на MinIO S3',
     };
   }
+
+  async deleteFile(objectName: string) {
+    await this.minioClientService.delete(objectName);
+
+    return {
+      message: 'Файл удален из MinIO S3',
+    };
+  }
 }

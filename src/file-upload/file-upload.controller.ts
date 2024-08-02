@@ -1,4 +1,12 @@
-import { Controller, Post, UseInterceptors, UploadedFile, UploadedFiles } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  UseInterceptors,
+  UploadedFile,
+  UploadedFiles,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { FileInterceptor, FileFieldsInterceptor } from '@nestjs/platform-express';
 import { FileUploadService } from './file-upload.service';
 import { BufferedFile } from 'src/minio-client/minio-client.model';
@@ -22,5 +30,10 @@ export class FileUploadController {
   )
   async uploadMany(@UploadedFiles() files: BufferedFile) {
     return this.fileUploadService.uploadMany(files);
+  }
+
+  @Delete(':fileName')
+  async deleteSingle(@Param('fileName') fileName: string) {
+    return await this.fileUploadService.deleteFile(fileName);
   }
 }

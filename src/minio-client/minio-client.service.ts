@@ -39,11 +39,18 @@ export class MinioClientService {
     };
   }
 
-  async delete(objetName: string, baseBucket: string = this.baseBucket) {
-    this.client.removeObject(baseBucket, objetName, (err) => {
-      if (err) {
-        throw new HttpException('С удалением файла что-то пошло не так', HttpStatus.BAD_REQUEST);
-      }
+  async delete(objectName: string, baseBucket: string = this.baseBucket) {
+    const exists = await this.client.statObject(baseBucket, objectName).catch((err) => {
+      throw new HttpException(
+        `Ошибка при проверке существования файла: ${err}`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     });
+
+    if (exists) {
+      await this.client.removeObject(baseBucket, objectName).catch((err) => {
+        throw new HttpException(`Ошибка удаления файла: ${err}`, HttpStatus.BAD_REQUEST);
+      });
+    }
   }
 }
