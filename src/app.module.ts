@@ -10,6 +10,8 @@ import { UsersModule } from './users/users.module';
 import 'dotenv/config';
 import { JwtModule } from '@nestjs/jwt';
 import { FavoritesModule } from './favorites/favorites.module';
+import { MinioClientModule } from './minio-client/minio-client.module';
+import { FileUploadModule } from './file-upload/file-upload.module';
 import { CartModule } from './cart/cart.module';
 
 @Module({
@@ -31,6 +33,8 @@ import { CartModule } from './cart/cart.module';
       secret: `${process.env.SECRET}`,
       signOptions: { expiresIn: '24h' },
     }),
+    MinioClientModule,
+    FileUploadModule,
   ],
   controllers: [],
   providers: [],

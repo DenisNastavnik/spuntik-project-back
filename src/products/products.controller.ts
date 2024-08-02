@@ -10,6 +10,7 @@ import {
   UseGuards,
   HttpStatus,
   Query,
+  HttpException,
 } from '@nestjs/common';
 import { ProductsService } from './products.service';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -107,7 +108,12 @@ export class ProductsController {
   async create(
     @Body(new ValidationPipe({ transform: true })) product: CreateProductDto,
   ): Promise<Product> {
-    return await this.productsService.create(product);
+    try {
+      const createdProduct = await this.productsService.create(product);
+      return createdProduct;
+    } catch (error) {
+      throw new HttpException('Ошибка при создании продукта', HttpStatus.INTERNAL_SERVER_ERROR);
+    }
   }
 
   @ApiOperation({ summary: 'Изменение товара' })
