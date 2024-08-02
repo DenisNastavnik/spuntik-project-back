@@ -17,7 +17,20 @@ export class MinioClientService {
     this.logger = new Logger('MinioStorageService');
   }
 
-  public async upload(file: BufferedFile, baseBucket: string = this.baseBucket) {
+  public async upload(
+    file: BufferedFile,
+    baseBucket: string = this.baseBucket,
+    allowedExtensions: string[] = ['.jpg', '.png'],
+  ) {
+    const fileExt = file.originalname.substring(file.originalname.lastIndexOf('.'));
+
+    if (!allowedExtensions.includes(fileExt)) {
+      throw new HttpException(
+        'Недопустимые расширения. Допустимые расширения: ' + allowedExtensions.join(', '),
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
     const temp_filename = Date.now().toString();
     const hashedFileName = crypto.createHash('md5').update(temp_filename).digest('hex');
     const ext = file.originalname.substring(
