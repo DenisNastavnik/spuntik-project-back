@@ -34,7 +34,6 @@ export class OrdersController {
     try {
       return await this.orderService.findAll(req.user.sub);
     } catch (error) {
-      console.log(error);
       throw new HttpException(
         'Ошибка при получении всех заказов',
         HttpStatus.INTERNAL_SERVER_ERROR,
@@ -107,7 +106,6 @@ export class OrdersController {
       }
       return updatedOrder;
     } catch (error) {
-      console.log(error);
       throw new HttpException(
         'Ошибка при изменении данных заказа',
         HttpStatus.INTERNAL_SERVER_ERROR,
