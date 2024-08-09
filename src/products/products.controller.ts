@@ -100,6 +100,22 @@ export class ProductsController {
     return await this.productsService.findOne(id);
   }
 
+  @ApiOperation({ summary: 'Получение товаров по id' })
+  @Post('/ids')
+  async findProductsByIds(@Body('ids') ids: string[]): Promise<Product[]> {
+    try {
+      if (!ids || ids.length === 0) {
+        throw new HttpException('Не передан массив строк ids', HttpStatus.BAD_REQUEST);
+      }
+      return await this.productsService.findProductsByIds(ids);
+    } catch (error) {
+      throw new HttpException(
+        `Ошибка при получении продуктов по id`,
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
+  }
+
   @ApiOperation({ summary: 'Создание нового товара' })
   @ApiResponse({ status: HttpStatus.OK, type: Product })
   @UseGuards(AuthGuard, RolesGuard)

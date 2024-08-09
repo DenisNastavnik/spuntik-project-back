@@ -131,4 +131,9 @@ export class ProductsService {
     }
     return result;
   }
+
+  async findProductsByIds(ids: string[]): Promise<Product[]> {
+    const result = await this.productModel.find({ _id: { $in: ids } }).exec();
+    return result;
+  }
 }
