@@ -28,7 +28,7 @@ export class Order {
   price: number;
 
   @Prop({ type: mongoose.Schema.Types.ObjectId })
-  pickup_point: [mongoose.Schema.Types.ObjectId];
+  pickup_point: mongoose.Schema.Types.ObjectId;
 
   @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId }] })
   products: mongoose.Schema.Types.ObjectId[];
