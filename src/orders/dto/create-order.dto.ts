@@ -2,11 +2,6 @@ import { IsString, IsNumber, IsArray, IsNotEmpty, IsDateString } from 'class-val
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateOrderDto {
-  @ApiProperty({ example: '8745vb7v4r27483834h8', description: 'Id покупателя' })
-  @IsString()
-  @IsNotEmpty()
-  readonly customer_id: string;
-
   @ApiProperty({ example: 'Delivered', description: 'Статус заказа' })
   @IsString()
   @IsNotEmpty()
@@ -33,7 +28,7 @@ export class CreateOrderDto {
   readonly price: number;
 
   @ApiProperty({
-    example: '04jt34j003m540f3fm3o',
+    example: '66b3735e5193eac5d239487a',
     description: 'Id точки выдачи',
   })
   @IsString()
@@ -41,7 +36,10 @@ export class CreateOrderDto {
   readonly pickup_point: string;
 
   @ApiProperty({
-    example: ['04jt34j003m540f3fm3o', 'f0j4g39fn304nf03fn', 'f439hnf9n39fn39fn'],
+    example: [
+      { product: '6692a604ab2be458ce36edb4', quantity: 5 },
+      { product: '66929c15ab2be458ce36ed75', quantity: 3 },
+    ],
     description: 'Id продуктов',
   })
   @IsArray()

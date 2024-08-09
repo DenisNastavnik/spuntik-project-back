@@ -23,7 +23,7 @@ export class SignInUserDto {
 
   readonly cart?: OrderProduct[];
 
-  readonly orders?: [mongoose.Schema.Types.ObjectId];
+  readonly orders?: mongoose.Types.ObjectId[];
 
   readonly reviews?: mongoose.Types.ObjectId[];
 

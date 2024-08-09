@@ -31,8 +31,8 @@ export class Customer {
   @Prop([{ type: OrderProductSchema }])
   cart: OrderProduct[];
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  orders: [mongoose.Schema.Types.ObjectId];
+  @Prop({ type: [{ type: mongoose.Types.ObjectId, ref: 'Order' }] })
+  orders: mongoose.Types.ObjectId[];
 
   @Prop({ type: [{ type: mongoose.Types.ObjectId, ref: 'Review' }] })
   reviews: mongoose.Types.ObjectId[];

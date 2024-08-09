@@ -1,11 +1,12 @@
 import { Schema, Prop, SchemaFactory } from '@nestjs/mongoose';
 import { ApiProperty } from '@nestjs/swagger';
 import mongoose from 'mongoose';
+import { OrderProduct, OrderProductSchema } from '../cart/cart.schema';
 
-@Schema()
+@Schema({ versionKey: false })
 export class Order {
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
-  customer_id: [mongoose.Schema.Types.ObjectId];
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Customer' })
+  customer_id: mongoose.Schema.Types.ObjectId;
 
   @ApiProperty({ example: 'active', description: 'Статус' })
   @Prop({ type: String })
@@ -27,11 +28,11 @@ export class Order {
   @Prop({ type: Number })
   price: number;
 
-  @Prop({ type: mongoose.Schema.Types.ObjectId })
+  @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'PickupPoint' })
   pickup_point: mongoose.Schema.Types.ObjectId;
 
-  @Prop({ type: [{ type: mongoose.Schema.Types.ObjectId }] })
-  products: mongoose.Schema.Types.ObjectId[];
+  @Prop({ type: [{ type: OrderProductSchema }] })
+  products: OrderProduct[];
 }
 
 export const OrderSchema = SchemaFactory.createForClass(Order);
