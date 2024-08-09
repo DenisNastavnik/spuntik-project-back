@@ -59,6 +59,7 @@ export class OrderService {
   }
 
   async create(id: string, order: CreateOrderDto): Promise<Order> {
+    Object.assign(order, { customer_id: id });
     const newOrder = new this.ordersModel(order);
 
     await this.customersModel.findByIdAndUpdate(id, { $push: { orders: newOrder._id } }).exec();
