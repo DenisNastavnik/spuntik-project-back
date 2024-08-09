@@ -8,16 +8,19 @@ import {
   Param,
   Post,
   Put,
+  Req,
   UseGuards,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { OrderService } from './orders.service';
 import { Order } from './orders.schema';
-import { Role, Roles } from 'src/decorators';
+import { Role, Roles } from '../decorators';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { AuthGuard, RolesGuard } from '../users';
+import { UserRequest } from '../favorites/favorites.types';
 
+@ApiBearerAuth()
 @ApiTags('Orders')
 @Controller('orders')
 export class OrdersController {
@@ -25,10 +28,11 @@ export class OrdersController {
 
   @ApiOperation({ summary: 'Получение всех заказов' })
   @ApiResponse({ status: HttpStatus.OK, type: [Order] })
+  @UseGuards(AuthGuard, RolesGuard)
   @Get()
-  async findAll(): Promise<Order[]> {
+  async findAll(@Req() req: UserRequest): Promise<Order[]> {
     try {
-      return await this.orderService.findAll();
+      return await this.orderService.findAll(req.user.sub);
     } catch (error) {
       throw new HttpException(
         'Ошибка при получении всех заказов',
@@ -39,6 +43,7 @@ export class OrdersController {
 
   @ApiOperation({ summary: 'Получение заказа по id' })
   @ApiResponse({ status: HttpStatus.OK, type: Order })
+  @UseGuards(AuthGuard, RolesGuard)
   @Get(':id')
   async findOne(@Param('id') id: string): Promise<Order | null> {
     try {
@@ -52,16 +57,17 @@ export class OrdersController {
     }
   }
 
-  @UseGuards(AuthGuard, RolesGuard)
-  @Roles(Role.Customer)
   @ApiOperation({ summary: 'Создание нового заказа' })
   @ApiResponse({ status: HttpStatus.CREATED, type: Order })
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(Role.Customer)
   @Post()
   async create(
+    @Req() req: UserRequest,
     @Body(new ValidationPipe({ transform: true })) order: CreateOrderDto,
   ): Promise<Order> {
     try {
-      const newOrder = await this.orderService.create(order);
+      const newOrder = await this.orderService.create(req.user.sub, order);
       return newOrder;
     } catch (error) {
       throw new HttpException('Ошибка при создании заказа', HttpStatus.INTERNAL_SERVER_ERROR);
@@ -112,9 +118,9 @@ export class OrdersController {
   @ApiOperation({ summary: 'Удаление заказа по id' })
   @ApiResponse({ status: HttpStatus.OK, type: Order })
   @Delete(':id')
-  async delete(@Param('id') id: string): Promise<Order> {
+  async delete(@Req() req: UserRequest, @Param('id') id: string): Promise<Order> {
     try {
-      const deletedOrder = await this.orderService.delete(id);
+      const deletedOrder = await this.orderService.delete(req.user.sub, id);
       if (!deletedOrder) {
         throw new HttpException('Не удалось удалить заказ', HttpStatus.INTERNAL_SERVER_ERROR);
       }
